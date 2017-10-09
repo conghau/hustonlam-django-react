@@ -24,7 +24,7 @@ SECRET_KEY = '3a+3dt)v17&ai4!1#w030pylw2q^t3gqtchf9%f!73%=-b$*%7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'localhost:3000']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'localhost:3000', 'hautruong.pythonanywhere.com']
 
 # Application definition
 
@@ -86,6 +86,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'root',
         'PASSWORD': 'root',
+        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
         'OPTIONS': {
             'autocommit': True,
         },

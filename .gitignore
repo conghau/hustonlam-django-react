@@ -1,2 +1,5 @@
 .idea
 .DS_Store
+*/__pycache__/*
+hustonlamBE/__pycache__/settings.cpython-36.pyc
+hustonlamBE/__pycache__/conf.cpython-36.pyc

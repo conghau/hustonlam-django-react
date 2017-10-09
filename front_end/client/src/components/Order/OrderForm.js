@@ -12,7 +12,7 @@ import PageBase from '../../components/common/PageBase'
 
 class OrderForm extends React.Component {
     constructor(props, context) {
-        super(props, context)
+        super(props, context);
         this.state = this.getDefaultState();
         ['onChange', 'onSave', 'onReset'].forEach((method) => this[method] = this[method].bind(this))
     }
@@ -29,7 +29,7 @@ class OrderForm extends React.Component {
     }
 
     onChange(event, newValue) {
-        let formControlValue = {}
+        let formControlValue = {};
         if (newValue === null) {
             formControlValue[event.target.name] = event.target.value
         } else {
@@ -39,7 +39,7 @@ class OrderForm extends React.Component {
     }
 
     onReset() {
-        let defaultState = this.getDefaultState()
+        let defaultState = this.getDefaultState();
         this.setState({...defaultState})
     };
 
@@ -49,7 +49,7 @@ class OrderForm extends React.Component {
             if (get(this.state, `${field}`, '') === '') {
                 validateMessages[field] = 'This field is required'
             }
-        })
+        });
 
         if (!isEmpty(validateMessages)) {
             this.setState({canSubmit: false, validationMessages: validateMessages})
@@ -59,14 +59,15 @@ class OrderForm extends React.Component {
                 o_to: this.state.to || '',
                 quantity: this.state.quantity || 0
             };
-            this.setState({canSubmit: true, saveResult: ''})
-            this.props.handleSave(data).then(res => {
-                if (isEmpty(res)) {
-                    this.setState({saveResult: 'error'})
-                } else {
-                    this.setState({saveResult: 'success'})
-                }
-            })
+            this.setState({canSubmit: true, saveResult: '', validateMessages: validateMessages}, () => {
+                this.props.handleSave(data).then(res => {
+                    if (isEmpty(res)) {
+                        this.setState({saveResult: 'error'})
+                    } else {
+                        this.setState({saveResult: 'success'})
+                    }
+                })
+            });
         }
     }
 
@@ -90,8 +91,7 @@ class OrderForm extends React.Component {
             }
         }
 
-        const {validationMessages, saveResult} = this.state
-
+        const {validationMessages, saveResult} = this.state;
         return (
             <Row>
                 {(saveResult === 'error') &&
