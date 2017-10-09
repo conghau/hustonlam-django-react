@@ -1,0 +1,32 @@
+{# Simple template base using bootstrap #}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="http://harvesthq.github.io/chosen/chosen.jquery.js"></script>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+<div class="container" role="main">
+    {% block content %}{% endblock %}
+</div>
+{% if mode == 'dev' %}
+    <script src="http://127.0.0.1:3000/vendor.js"></script>
+    <script src="http://127.0.0.1:3000/app.js"></script>
+    <script src="http://127.0.0.1:3000/3.order.js"></script>
+{% else %}
+        <script src="{% static 'hustonlam_apps/vendor.'|add:asset_version|add:'.js' %}"></script>
+        <script src="{% static 'hustonlam_apps/app.'|add:asset_version|add:'.js' %}"></script>
+{% endif %}
+</body>
