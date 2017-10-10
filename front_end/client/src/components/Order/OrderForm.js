@@ -22,6 +22,7 @@ class OrderForm extends React.Component {
             from: '',
             to: '',
             quantity: '',
+            finish_time: '',
             canSubmit: false,
             validationMessages: {},
             saveResult: '',
@@ -45,7 +46,7 @@ class OrderForm extends React.Component {
 
     onSave() {
         let validateMessages = {};
-        ['from', 'to', 'quantity'].map(field => {
+        ['from', 'to', 'quantity', 'finish_time'].map(field => {
             if (get(this.state, `${field}`, '') === '') {
                 validateMessages[field] = 'This field is required'
             }
@@ -57,7 +58,8 @@ class OrderForm extends React.Component {
             let data = {
                 o_from: this.state.from || '',
                 o_to: this.state.to || '',
-                quantity: this.state.quantity || 0
+                quantity: this.state.quantity || 0,
+                finish_time: this.state.finish_time || 0
             };
             this.setState({canSubmit: true, saveResult: '', validateMessages: validateMessages}, () => {
                 this.props.handleSave(data).then(res => {
@@ -134,6 +136,17 @@ class OrderForm extends React.Component {
                                 fullWidth={true}
                                 onChange={this.onChange}
                                 errorText={validationMessages['quantity'] || ''}
+                            />
+
+                            <TextField
+                                name="finish_time"
+                                value={this.state.finish_time || ''}
+                                type="number"
+                                hintText="Finish Time (minutes)"
+                                floatingLabelText="Finish Time"
+                                fullWidth={true}
+                                onChange={this.onChange}
+                                errorText={validationMessages['finish_time'] || ''}
                             />
 
                             <div style={styles.buttons}>

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget, DragSource } from 'react-dnd';
-import {Badge} from 'react-bootstrap';
+import { Badge } from 'react-bootstrap';
 import Cards from './Cards';
 
 const listSource = {
@@ -68,19 +68,29 @@ export default class CardsContainer extends Component {
     const opacity = isDragging ? 0.5 : 1;
 
     return connectDragSource(connectDropTarget(
-      <div className="desk border-box" style={{ opacity }}>
-        <div className="desk-head">
-          <div className="desk-name">{item.name} <Badge className="info">{total || 0}</Badge></div>
-          
+      <div className="portlet light bordered" style={{ opacity }}>
+        <div className="portlet-title">
+          <div className="caption">
+            <i className="icon-speech"></i>
+            <span className="caption-subject bold uppercase"> {item.name} <Badge className="info">{total || 0}</Badge></span>
+          </div>
+          <div className="actions">
+            {/* <a href="javascript:;" class="btn btn-circle btn-default">
+              <i className="fa fa-plus"></i> Add </a> */}
+          </div>
         </div>
-        <Cards
-          moveCard={moveCard}
-          x={x}
-          cards={item.items}
-          startScrolling={this.props.startScrolling}
-          stopScrolling={this.props.stopScrolling}
-          isScrolling={this.props.isScrolling}
-        />
+        <div className="portlet-body">
+          <div className="desk">
+            <Cards
+              moveCard={moveCard}
+              x={x}
+              cards={item.items}
+              startScrolling={this.props.startScrolling}
+              stopScrolling={this.props.stopScrolling}
+              isScrolling={this.props.isScrolling}
+            />
+          </div>
+        </div>
       </div>
     ));
   }

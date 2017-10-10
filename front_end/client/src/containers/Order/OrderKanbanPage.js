@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import update from 'immutability-helper'
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend, { NativeTypes } from 'react-dnd-html5-backend'
-import OrderCard from '../../components/Order/OrderCard'
 import { Row, Col } from 'react-bootstrap';
 import PageBase from '../../components/common/PageBase'
 import { connect } from 'react-redux'
@@ -16,6 +15,7 @@ import { isEmpty, get } from 'lodash'
 import CardsContainer from '../../components/Order/Cards/CardsContainer';
 import CustomDragLayer from '../../components/Order/CustomDragLayer';
 import { ORDER_STATE } from '../../constanst'
+import moment from 'moment'
 
 class OrderKanbanPage extends Component {
 	static propTypes = {
@@ -28,20 +28,43 @@ class OrderKanbanPage extends Component {
 		this.state = {
 			orders: [],
 			ordersGroup: [],
-		}
-		this.state = { isScrolling: false };
-		['startScrolling', 'stopScrolling', 'scrollRight', 'scrollLeft', 'moveCard', 'moveList', 'prepareDateRender'].forEach((method) => this[method] = this[method].bind(this))
+			isloaded: true,
+			isScrolling: false,
+			last_refresh: moment().format('YYYY-MM-DD HH:mm:ss')
+		};
+
+		['startScrolling', 'stopScrolling', 'scrollRight', 'scrollLeft', 'moveCard', 'moveList', 'prepareDateRender', 'getOrdersAction'].forEach((method) => this[method] = this[method].bind(this))
 
 	}
 
 	componentWillMount() {
-		this.props.actions.getOrdersAction();
+		this.getOrdersAction();
 	}
 
-	componentWillReceiveProps(nextProps) {
-		// if (!isEmpty(nextProps.lists)) {
+	componentDidMount() {
+		if (typeof saveToDraftAfterSeconds === 'undefined' || saveToDraftAfterSeconds === 0) {
+			var saveToDraftAfterSeconds = 20;
+		}
+		this.intervalGetOrdersAction = setInterval(this.getOrdersAction, parseInt(saveToDraftAfterSeconds) * 1000);
+	}
 
-		// }
+	componentWillUnmount() {
+		clearInterval(this.intervalGetOrdersAction);
+	}
+
+	getOrdersAction() {
+		const { isloaded } = this.state;
+		if (isloaded) {
+			console.log('getOrdersAction');
+			this.setState({ isloaded: false }, () => {
+				this.props.actions.getOrdersAction().then(re => {
+					this.setState({ isloaded: true, last_refresh: moment().format('YYYY-MM-DD HH:mm:ss') })
+				}).catch(err => {
+					console.log(err);
+					this.setState({ isloaded: true })
+				});
+			});
+		}
 	}
 
 	startScrolling(direction) {
@@ -80,7 +103,7 @@ class OrderKanbanPage extends Component {
 	moveCard(lastX, lastY, nextX, nextY, orderId) {
 		this.props.actions.moveCard(lastX, lastY, nextX, nextY);
 		const self = this;
-		if (orderId) {
+		if (orderId && lastX != nextX) {
 			let status = (nextX === 0 ? ORDER_STATE.NEW : (nextX === 1 ? ORDER_STATE.PROCESSING : ORDER_STATE.FINISHED));
 
 			self.props.actions.updateOrderAction(orderId, { 'status': status });
@@ -126,31 +149,40 @@ class OrderKanbanPage extends Component {
 
 	render() {
 		let ordersGroup = this.prepareDateRender();
+		const { last_refresh } = this.state;
 		return (
-			<main>
-			
-			<div style={{ height: '100%' }}>
-				<PageBase>
-					<div>
-						<CustomDragLayer snapToGrid={false} />
-						{ordersGroup && ordersGroup.map((item, i) =>
-							<CardsContainer
-								key={item.id}
-								id={item.id}
-								item={item}
-								moveCard={this.moveCard}
-								moveList={this.moveList}
-								startScrolling={this.startScrolling}
-								stopScrolling={this.stopScrolling}
-								isScrolling={this.state.isScrolling}
-								x={i}
-								total={item.total || 0}
-							/>
-						)}
+			<div>
+				<div className='order_kanban_info_system'>
+					<p>Current time: {moment().format('YYYY-MM-DD HH:mm:ss')}</p>
+					<p>Last refesh: {last_refresh}</p>
+				</div>
+				<div style={{ "clear": "both" }} />
+				<main>
+					<div style={{ height: '100%' }}>
+						<PageBase>
+							<div className="__CardsContainer">
+								<CustomDragLayer snapToGrid={false} />
+								{ordersGroup && ordersGroup.map((item, i) =>
+									<Col md={4} key={item.id}>
+										<CardsContainer
+											key={item.id}
+											id={item.id}
+											item={item}
+											moveCard={this.moveCard}
+											moveList={this.moveList}
+											startScrolling={this.startScrolling}
+											stopScrolling={this.stopScrolling}
+											isScrolling={this.state.isScrolling}
+											x={i}
+											total={item.total || 0}
+										/>
+									</Col>
+								)}
+							</div>
+						</PageBase>
 					</div>
-				</PageBase>
+				</main>
 			</div>
-			</main>
 
 		);
 	}

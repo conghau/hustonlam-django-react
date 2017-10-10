@@ -10,7 +10,8 @@ class Orders(models.Model):
     quantity = models.IntegerField()
     status = models.CharField(choices=ORDER_STATUS_CHOICES, default='new', max_length=10)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    updated_at = models.DateTimeField(auto_now_add=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True)
+    finish_time = models.IntegerField(blank=True, default=None)
 
     # We override the __str__ method for more descriptive name in the admin area.
     def __str__(self):

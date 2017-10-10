@@ -23,6 +23,7 @@ main {
   height: 100%;
   white-space: nowrap;
   //clearfix()
+  zoom: 1;
 }
 
 .border-box {
@@ -35,7 +36,7 @@ main {
 }
 
 .desk, .desk-placeholder, .desk-placeholder:hover {
-  width: 30%;
+  width:100%;
   display: inline-block;
   height: 100%;
   overflow: hidden;
@@ -50,6 +51,10 @@ main {
     margin-right: 0;
     
   }
+
+  .badge {
+    background-color: #0ea832;
+  }
   .desk-head {
     position: relative;
     padding: 5px 8px;
@@ -62,9 +67,7 @@ main {
     display: flex;
     justify-content: space-between;
     //clearfix();
-    .badge {
-      background-color: #0ea832;
-    }
+    
     .desk-name {
       // font-weight: bold;
       // white-space: normal;
@@ -94,7 +97,7 @@ main {
 }
 
 .item {
-  width: 90%;
+  width: 97%;
   margin: 0 auto 10px;
   background: #fff;
   min-height: 100px;
@@ -139,7 +142,6 @@ main {
       margin: 5px 0
     }
   }
-  .item-perfomers {
     //clearfix();
     padding: 5px 10px;
     .add-perfomers {
@@ -169,5 +171,48 @@ main {
         }
       }
     }
+  }
+
+.drag_preview {
+  display: 'block';
+  transform: 'rotate(-7deg)';
+  -webkit-transform: 'rotate(-7deg)';
+  min-width: 100px;
+  min-height: 100px
+  
+}
+.portlet.light.bordered {
+  padding: 12px 5px 15px;
+}
+
+.item {
+  &.new {
+    border-left: 4px solid #fdd736
+  }
+  &.processing {
+    border-left: 4px solid #2296f3
+  }
+  &.finished {
+    border-left: 4px solid #000000
+  }
+  .item-content {
+    .line {
+      display: block;
+    }
+  }
+}
+
+.finishtime_expired {
+  background-color: #d9534f!important;
+  color: white !important;
+}
+.order_kanban_info_system {
+  float: right;
+  text-align: right;
+}
+.__CardsContainer {
+  .info.badge {
+    background-color: green;
+    padding: 5px 10px;
   }
 }

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Card from './Cards/Card';
 
 const styles = {
-  display: 'inline-block',
+  display: 'block',
   transform: 'rotate(-7deg)',
   WebkitTransform: 'rotate(-7deg)'
 };
@@ -12,11 +12,14 @@ const propTypes = {
 };
 
 const CardDragPreview = (props) => {
-  styles.width = `${props.card.clientWidth || 243}px`;
-  styles.height = `${props.card.clientHeight || 243}px`;
+  styles.width = `${props.card.clientWidth || 200}px`;
+  styles.height = `${props.card.clientHeight || 200}px`;
 
   return (
-    <div style={styles}>
+    <div 
+    style={styles} 
+    //className= 'drag_preview'
+    >
       <Card item={props.card.item} />
     </div>
   );

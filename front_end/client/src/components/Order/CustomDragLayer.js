@@ -18,7 +18,7 @@ function getItemStyles(props) {
       display: 'none'
     };
   }
-
+console.log(currentOffset);
   let { x, y } = currentOffset;
 
   if (props.snapToGrid) {
@@ -30,6 +30,7 @@ function getItemStyles(props) {
   }
 
   const transform = `translate(${x}px, ${y}px)`;
+  console.log(transform);
   return {
     WebkitTransform: transform,
     transform
