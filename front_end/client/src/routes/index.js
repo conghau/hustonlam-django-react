@@ -9,6 +9,7 @@ export function createRoutes(store) {
         indexRoute: Home,
         childRoutes: [
             Order.OrderRouter(store),
+            Order.OrderKanbanRouter(store),
         ]
     };
 }

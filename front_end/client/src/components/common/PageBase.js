@@ -21,9 +21,7 @@ const PageBase = (props) => {
 
                 <Divider/>
                 {props.children}
-
                 <div style={globalStyles.clear}/>
-
             </Paper>
         </div>
     );

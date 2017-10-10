@@ -6,5 +6,6 @@ urlpatterns = [
     url(r'^api/', include(model_viewsets.urlpatterns)),
     url(r'^$', views.index_view, name='index'),
     url(r'^order/', views.order_view, name='order_view'),
+    url(r'^order-kanban/', views.order_kanban_view, name='order_kanban_view'),
 
 ]

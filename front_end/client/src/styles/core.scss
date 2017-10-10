@@ -7,15 +7,23 @@ html {
   box-sizing: border-box;
 }
 
-html,
-body {
+html
+,body {
   margin: 0;
   padding: 0;
   height: 100%;
 }
 
 *,
-*:before,
-*:after {
+*:before, *:after {
   box-sizing: inherit;
+}
+
+.clearfix {
+  // clearfix()
+}
+
+html {
+  position: relative;
+  height: 100%;
 }

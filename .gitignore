@@ -3,3 +3,8 @@
 */__pycache__/*
 hustonlamBE/__pycache__/settings.cpython-36.pyc
 hustonlamBE/__pycache__/conf.cpython-36.pyc
+hustonlamBE/__pycache__/urls.cpython-36.pyc
+hustonlam_apps/__pycache__/urls.cpython-36.pyc
+hustonlam_apps/__pycache__/views.cpython-36.pyc
+
+hustonlamBE/settings.py

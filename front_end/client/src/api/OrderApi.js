@@ -28,6 +28,38 @@ class OrderApi {
             })
         })
     }
+
+    static updateOrders(id, data) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: 'PATCH',
+                url: `${this.getDomain()}/api/v1/orders/${id}/`,
+                data: data,
+                dataType: 'json'
+            }).done(function (res) {
+                console.log(res);
+                resolve(res)
+            }).fail(function () {
+                reject('Can not update order')
+            })
+        })
+    }
+
+    static getOrders(data) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: 'GET',
+                url: `${this.getDomain()}/api/v1/orders/`,
+                data: data,
+                dataType: 'json'
+            }).done(function (res) {
+                console.log(res);
+                resolve(res)
+            }).fail(function () {
+                reject('Can not get order')
+            })
+        })
+    }
 }
 
 export default OrderApi

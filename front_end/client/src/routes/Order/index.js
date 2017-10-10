@@ -21,3 +21,25 @@ export function OrderRouter(store) {
         }
     }
 }
+
+export function OrderKanbanRouter(store) {
+    return {
+        path: '/apps/order-kanban/',
+        /* Async getComponent is only invoked when route matches */
+        getComponent (nextState, cb) {
+            require.ensure([], (require) => {
+                /* Webpack - use require callback to define dependencies for building */
+                const OrderKanbanPage = require('../../containers/Order/OrderKanbanPage').default;
+                const OrderReducer = require('../../reducers/Order/OrderReducer').default;
+
+                /* Add the reducer to the store on key 'counter' */
+                injectReducer(store, 'order', OrderReducer);
+
+                /* Return getComponent */
+                cb(null, OrderKanbanPage);
+
+                /* Webpack named bundle */
+            }, 'order-kanban')
+        }
+    }
+}

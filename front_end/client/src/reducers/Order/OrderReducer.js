@@ -1,26 +1,27 @@
 import * as types from '../../actions/actionTypes';
 import initialState from '../initialState';
-import _ from 'lodash';
+import {get} from 'lodash';
 
-export default function TodoReducer(state = initialState.todoList, action) {
+export default function OrderReducer(state = initialState.orders, action) {
     switch (action.type) {
-        case types.LOAD_TODO_LIST_SUCCESS:
+        case types.LOAD_LIST_ORDER_SUCCESS:
             return Object.assign({}, state, {
-                todos: action.payload
+                lists: action.payload
             });
-        case types.LOAD_TODO_LIST_ERROR:
+        case types.LOAD_LIST_ORDER_ERROR:
             return Object.assign({}, state, action.payload);
-        case types.LOAD_TODO_DETAIL_LIST_SUCCESS:
-            // return Object.assign({}, state, ...{
-            //     todoItems: action.payload
-            // });
+        case types.UPDATE_ORDER_SUCCESS:
+            let id = action.payload.id;
+            let currentList = get(state, 'lists.results', []);
+            let items = currentList.map(item => {
+                if (item.id === id) {
+                    return action.payload.data;
+                }
+                return item;
+            })
             return Object.assign({}, state, {
-                todoItems : [
-                    ...state.todoItems.filter(item => item.id !== action.payload.id),
-                    Object.assign({}, action.payload)
-                ]});
-        case types.LOAD_TODO_DETAIL_LIST_ERROR:
-            return Object.assign({}, state, action.payload);
+                lists: { ...state.lists, results: items }
+            });
         default:
             return state;
     }
