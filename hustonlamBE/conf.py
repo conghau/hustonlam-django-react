@@ -1,3 +1,3 @@
-MODE_DEVELOPMENT = 'dev'
-asset_version = '05547e8a92045854d59a'
+MODE_DEVELOPMENT = 'prod'
+asset_version = '537eb8b7297b848843b7'
 base_url = 'http://localhost:8000/apps'
