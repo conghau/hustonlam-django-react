@@ -2,11 +2,11 @@
  * Created by hautruong on 10/9/17.
  */
 import * as types from './actionTypes'
-import OrderApi from '../Api/OrderApi'
+import orderApi from '../Api/OrderApi'
 
 export function createOrderAction(data) {
   return function (dispatch) {
-    return OrderApi.createOrders(data).then(res => {
+    return orderApi.createOrders(data).then(res => {
       dispatch({
         type: types.CREATE_ORDER_SUCCESS,
         payload: {}
@@ -23,7 +23,7 @@ export function createOrderAction(data) {
 
 export function updateOrderAction(id, data) {
   return function (dispatch) {
-    return OrderApi.updateOrders(id, data).then(res => {
+    return orderApi.updateOrders(id, data).then(res => {
       dispatch({
         type: types.UPDATE_ORDER_SUCCESS,
         payload: { id: id, data: res }
@@ -40,7 +40,7 @@ export function updateOrderAction(id, data) {
 
 export function getOrdersAction(data) {
   return function (dispatch) {
-    return OrderApi.getOrders(data).then(res => {
+    return orderApi.getOrders(data).then(res => {
       dispatch({
         type: types.LOAD_LIST_ORDER_SUCCESS,
         payload: res
@@ -50,6 +50,24 @@ export function getOrdersAction(data) {
     }).catch(error => {
       console.log(error)
       dispatch({ type: types.LOAD_LIST_ORDER_ERROR, payload: { type: 'danger', value: 'something_went_wrong' } })
+      return {}
+    })
+  }
+}
+
+export function deleteOrdersAction(id) {
+  return function (dispatch) {
+    return orderApi.deleteOrders(id).then(res => {
+      console.log(res)
+      dispatch({
+        type: types.DELETE_ORDER_SUCCESS,
+        payload: {id: id}
+      })
+
+      return res;
+    }).catch(error => {
+      console.log(error)
+      dispatch({ type: types.DELETE_ORDER_ERROR, payload: { type: 'danger', value: 'something_went_wrong' } })
       return {}
     })
   }

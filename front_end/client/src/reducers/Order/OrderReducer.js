@@ -1,6 +1,6 @@
 import * as types from '../../actions/actionTypes';
 import initialState from '../initialState';
-import {get} from 'lodash';
+import { get } from 'lodash';
 
 export default function OrderReducer(state = initialState.orders, action) {
     switch (action.type) {
@@ -21,6 +21,15 @@ export default function OrderReducer(state = initialState.orders, action) {
             })
             return Object.assign({}, state, {
                 lists: { ...state.lists, results: items }
+            });
+        case types.DELETE_ORDER_SUCCESS:
+            let idd = action.payload.id;
+            let currentLists = get(state, 'lists.results', []);
+            let itemss = currentLists.filter(item => {
+                return (item.id !== idd)
+            })
+            return Object.assign({}, state, {
+                lists: { ...state.lists, results: itemss }
             });
         default:
             return state;

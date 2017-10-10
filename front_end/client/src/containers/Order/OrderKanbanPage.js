@@ -38,6 +38,12 @@ class OrderKanbanPage extends Component {
 
 	}
 
+	getChildContext() {
+		return {
+			deleteCard: this.handleDeleteCard.bind(this),
+		}
+	}
+
 	componentWillMount() {
 		this.getOrdersAction();
 	}
@@ -59,7 +65,7 @@ class OrderKanbanPage extends Component {
 			console.log('getOrdersAction');
 			this.setState({ isloaded: false }, () => {
 				this.props.actions.getOrdersAction().then(re => {
-					this.setState({ isloaded: true, last_refresh: moment(new Date()).utc().format("YYYY-MM-DD HH:mm:ss")				})
+					this.setState({ isloaded: true, last_refresh: moment(new Date()).utc().format("YYYY-MM-DD HH:mm:ss") })
 				}).catch(err => {
 					console.log(err);
 					this.setState({ isloaded: true })
@@ -101,6 +107,13 @@ class OrderKanbanPage extends Component {
 		this.setState({ isScrolling: false }, clearInterval(this.scrollInterval));
 	}
 
+
+	handleDeleteCard(orderId) {
+		const self = this;
+		if (orderId) {
+			self.props.actions.deleteOrdersAction(orderId);
+		}
+	}
 	moveCard(lastX, lastY, nextX, nextY, orderId) {
 		this.props.actions.moveCard(lastX, lastY, nextX, nextY);
 		const self = this;
@@ -165,7 +178,7 @@ class OrderKanbanPage extends Component {
 					<p>Current time: {moment(new Date()).utc().format("YYYY-MM-DD HH:mm:ss")}</p>
 					<p>Last refesh: {last_refresh}</p>
 					{lastUpdated &&
-						<p>Last update: {moment(lastUpdated,'YYYY-MM-DD HH:mm:ss' ).format('YYYY-MM-DD HH:mm:ss')}</p>
+						<p>Last update: {moment(lastUpdated, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')}</p>
 					}
 				</div>
 				<div style={{ "clear": "both" }} />
@@ -175,7 +188,7 @@ class OrderKanbanPage extends Component {
 							<div className="__CardsContainer">
 								<CustomDragLayer snapToGrid={false} />
 								{ordersGroup && ordersGroup.map((item, i) =>
-									<Col md={4} key={item.id}>
+									<Col md={4} sm={4} key={item.id}>
 										<CardsContainer
 											key={item.id}
 											id={item.id}
@@ -198,6 +211,9 @@ class OrderKanbanPage extends Component {
 
 		);
 	}
+}
+OrderKanbanPage.childContextTypes = {
+	deleteCard: PropTypes.func
 }
 
 const mapDispatchToProps = (dispatch) => {

@@ -2,12 +2,11 @@
  * Created by hautruong on 10/9/17.
  */
 import $ from 'jquery'
-import {isEmpty} from 'lodash'
+import { isEmpty } from 'lodash'
 
 class OrderApi {
     static getDomain() {
-        if (typeof base_url === 'undefined' || isEmpty(base_url))
-        {
+        if (typeof base_url === 'undefined' || isEmpty(base_url)) {
             return `${window.location.protocol}//${window.location.host}`
         }
         return base_url;
@@ -57,6 +56,20 @@ class OrderApi {
                 resolve(res)
             }).fail(function () {
                 reject('Can not get order')
+            })
+        })
+    }
+
+    static deleteOrders(id) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: 'DELETE',
+                url: `${this.getDomain()}/api/v1/orders/${id}/`,
+                dataType: 'json'
+            }).done(function (res) {
+                resolve(id)
+            }).fail(function () {
+                reject('Can not delete order')
             })
         })
     }

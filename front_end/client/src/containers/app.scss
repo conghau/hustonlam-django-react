@@ -215,4 +215,8 @@ main {
     background-color: green;
     padding: 5px 10px;
   }
+  .portlet-body {
+    overflow: auto;
+    max-height: 500px
+  }
 }

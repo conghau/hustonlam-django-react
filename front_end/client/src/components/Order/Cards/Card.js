@@ -8,6 +8,7 @@ import { blue500, yellow600, black } from 'material-ui/styles/colors';
 import EditorInsertChart from 'material-ui/svg-icons/editor/insert-chart';
 import { ORDER_STATE } from '../../../constanst'
 import monent from 'moment'
+import {isFunction} from 'lodash'
 
 const propTypes = {
   item: PropTypes.object.isRequired,
@@ -17,8 +18,13 @@ const propTypes = {
 const galPng = require('../../../components/common/assets/images/gal.png');
 const delPng = require('../../../components/common/assets/images/del.png');
 
+const deleteCard = (context, id) => {
+  if(context.deleteCard && isFunction(context.deleteCard)) {
+    return context.deleteCard(id);
+  }
+}
 
-const Card = (props) => {
+const Card = (props, context) => {
   const { style, item } = props;
   let color = (item.status === ORDER_STATE.NEW ? yellow600 : (item.status === ORDER_STATE.PROCESSING ? blue500 : black));
   let finishTime = item.finish_time || 0;
@@ -32,7 +38,7 @@ const Card = (props) => {
           <div className="badge finishtime_expired">Expired</div>
         }
         <div className="delete-perfomers">
-          <a href="#"><img src={delPng} alt="Delete perfomers" /></a>
+          <a href="#" onClick={() => {deleteCard(context, item.id)}}><img src={delPng} alt="Delete perfomers" /></a>
         </div>
       </div>
       <div className="item-container">
@@ -57,5 +63,9 @@ const Card = (props) => {
 };
 
 Card.propTypes = propTypes;
+
+Card.contextTypes = {
+  deleteCard: PropTypes.func
+}
 
 export default Card;
