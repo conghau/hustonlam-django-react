@@ -30,7 +30,8 @@ class OrderKanbanPage extends Component {
 			ordersGroup: [],
 			isloaded: true,
 			isScrolling: false,
-			last_refresh: moment().format('YYYY-MM-DD HH:mm:ss')
+			last_refresh: moment(new Date()).utc().format("YYYY-MM-DD HH:mm:ss"),
+			lastUpdated: null,
 		};
 
 		['startScrolling', 'stopScrolling', 'scrollRight', 'scrollLeft', 'moveCard', 'moveList', 'prepareDateRender', 'getOrdersAction'].forEach((method) => this[method] = this[method].bind(this))
@@ -58,7 +59,7 @@ class OrderKanbanPage extends Component {
 			console.log('getOrdersAction');
 			this.setState({ isloaded: false }, () => {
 				this.props.actions.getOrdersAction().then(re => {
-					this.setState({ isloaded: true, last_refresh: moment().format('YYYY-MM-DD HH:mm:ss') })
+					this.setState({ isloaded: true, last_refresh: moment(new Date()).utc().format("YYYY-MM-DD HH:mm:ss")				})
 				}).catch(err => {
 					console.log(err);
 					this.setState({ isloaded: true })
@@ -127,8 +128,14 @@ class OrderKanbanPage extends Component {
 		let newOrder = [];
 		let proccessOrder = [];
 		let fishnishOrder = [];
-
+		let lastUpdated = null;
+		if (!isEmpty(lists)) {
+			lastUpdated = lists[0].updated_at;
+		}
 		lists.map(order => {
+			if (order.updated_at > lastUpdated) {
+				lastUpdated = order.updated_at;
+			}
 			if (order.status === ORDER_STATE.NEW) {
 				newOrder.push(order);
 			}
@@ -140,21 +147,26 @@ class OrderKanbanPage extends Component {
 			}
 		})
 
-		return [
-			{ id: ORDER_STATE.NEW, name: ORDER_STATE.NEW, items: newOrder, total: newOrder.length },
+		return {
+			lastUpdated: lastUpdated,
+			ordersGroup: [{ id: ORDER_STATE.NEW, name: ORDER_STATE.NEW, items: newOrder, total: newOrder.length },
 			{ id: ORDER_STATE.PROCESSING, name: ORDER_STATE.PROCESSING, items: proccessOrder, total: proccessOrder.length },
-			{ id: ORDER_STATE.FINISHED, name: ORDER_STATE.FINISHED, items: fishnishOrder, total: fishnishOrder.length },
-		];
+			{ id: ORDER_STATE.FINISHED, name: ORDER_STATE.FINISHED, items: fishnishOrder, total: fishnishOrder.length }],
+		};
 	}
 
 	render() {
-		let ordersGroup = this.prepareDateRender();
+		const newData = this.prepareDateRender();
+		const { lastUpdated, ordersGroup } = newData;
 		const { last_refresh } = this.state;
 		return (
 			<div>
 				<div className='order_kanban_info_system'>
-					<p>Current time: {moment().format('YYYY-MM-DD HH:mm:ss')}</p>
+					<p>Current time: {moment(new Date()).utc().format("YYYY-MM-DD HH:mm:ss")}</p>
 					<p>Last refesh: {last_refresh}</p>
+					{lastUpdated &&
+						<p>Last update: {moment(lastUpdated,'YYYY-MM-DD HH:mm:ss' ).format('YYYY-MM-DD HH:mm:ss')}</p>
+					}
 				</div>
 				<div style={{ "clear": "both" }} />
 				<main>

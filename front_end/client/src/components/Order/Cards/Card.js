@@ -27,8 +27,8 @@ const Card = (props) => {
   let durationTime = (now.unix() - createdAt.unix())/60;
   return (
     <div style={style} className={`item ${item.status}`} id={style ? item.id : null}>
-      <div className="item-name">#{item.id}
-        {(durationTime > finishTime) &&
+      <div className="item-name">#{`${item.id} ` } 
+        {(durationTime > finishTime) && (item.status !== ORDER_STATE.FINISHED) &&
           <div className="badge finishtime_expired">Expired</div>
         }
         <div className="delete-perfomers">
@@ -42,6 +42,7 @@ const Card = (props) => {
           <span className="line">Qty: {item.quantity}</span>
           <span className="line">Created at: {monent(item.created_at, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')}</span>
           <span className="line">Updated at: {monent(item.updated_at, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')}</span>
+          <span className="line">Time estimate: {item.finish_time} minutes</span>
         </div>
       </div>
       {/* <ListItem
