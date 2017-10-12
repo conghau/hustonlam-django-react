@@ -10,7 +10,7 @@ from datetime import datetime
 import random
 from dateutil import tz
 from django.utils import timezone
-from hustonlamBE.conf import path_to_folder_import
+from hustonlamBE.conf import path_to_folder_import, path_to_folder_archive
 import os
 
 
@@ -82,13 +82,20 @@ class Command(BaseCommand):
 
         def get_list_file():
             list_files = glob.glob(path_to_folder_import + '*.csv')
+            time_run_batch = datetime.now().strftime('%Y%m%d_%H%M%S')
+            os.makedirs(path_to_folder_archive, exist_ok=True)
             print('-' * 100)
             for file in list_files:
                 print('| {} |'.format(file))
                 file_name = '{}'.format(file)
+                head, tail = os.path.split(file_name)
                 with open(file_name, 'rt') as f_obj:
                     csv_dict_reader(f_obj)
-                    os.unlink(file_name)
+                    # os.unlink(file_name)
+
+                    file_name_new = path_to_folder_archive + tail + '.' + time_run_batch
+                    # os.makedirs(os.path.dirname(file_name_new), exist_ok=True)
+                    os.rename(file_name, file_name_new)
 
             print('-' * 100)
 
