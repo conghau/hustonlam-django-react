@@ -16,9 +16,6 @@ class Orders(models.Model):
     order_key = models.CharField(max_length=15, unique=True, null=True)
 
     def save(self, migrate=False, *args, **kwargs):
-        # if not self.id:
-        #     self.created_at = timezone.now()
-        # self.updated_at = timezone.now()
         if not migrate:
             if not self.id:
                 self.created_at = timezone.now()

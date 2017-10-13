@@ -21,37 +21,20 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
 
-        def turn_off_auto_now(ModelClass, field_name):
-            def auto_now_off(field):
-                field.auto_now = False
+        def get_list_file():
+            return glob.glob(path_to_folder_import + '*.csv')
 
-            do_to_model(ModelClass, field_name, auto_now_off)
+        def process_import_file(file_name):
+            with open(file_name, 'rt') as f_obj:
+                read_and_import(f_obj)
 
-        def turn_off_auto_now_add(ModelClass, field_name):
-            def auto_now_add_off(field):
-                field.auto_now_add = False
-
-            do_to_model(ModelClass, field_name, auto_now_add_off)
-
-        def do_to_model(ModelClass, field_name, func):
-            field = ModelClass._meta.get_field(field_name)
-            func(field)
-
-        def csv_dict_reader(file_obj):
+        def read_and_import(file_obj):
             """
             Read a CSV file using csv.DictReader
             """
             reader = csv.DictReader(file_obj, delimiter=',')
             from_zone = tz.gettz('UTC')
             for line in reader:
-                # print(line["ID"]),
-                # print(line["FROM"])
-                # print(line["TO"])
-                # print(line["STATUS"])
-                # print(line["CREATED"])
-                # print(line["FINISHED"])
-                # print(line["TRUCKID"])
-
                 order_key = line["ID"]
                 order_status = line["STATUS"]
                 order_time = datetime.strptime(line["CREATED"], '%Y-%m-%d %H:%M:%S')
@@ -61,13 +44,14 @@ class Command(BaseCommand):
 
                 current_order = Orders.objects.filter(order_key=order_key).last()
 
-                # turn_off_auto_now(Orders, "created_at")
-                # turn_off_auto_now_add(Orders, "updated_at")
+                # if current order is none then create, otherwise update
                 if current_order is None:
                     data = Orders()
                     data.created_at = order_time
                     data.updated_at = order_time
                 else:
+                    if order_time < current_order.created_at:
+                        continue
                     data = current_order
                     data.updated_at = order_time
 
@@ -80,24 +64,22 @@ class Command(BaseCommand):
 
                 data.save(migrate=True)
 
-        def get_list_file():
-            list_files = glob.glob(path_to_folder_import + '*.csv')
+        def process_import_folder():
+            list_files = get_list_file()
             time_run_batch = datetime.now().strftime('%Y%m%d_%H%M%S')
             os.makedirs(path_to_folder_archive, exist_ok=True)
-            print('-' * 100)
+
             for file in list_files:
                 print('| {} |'.format(file))
                 file_name = '{}'.format(file)
                 head, tail = os.path.split(file_name)
-                with open(file_name, 'rt') as f_obj:
-                    csv_dict_reader(f_obj)
-                    # os.unlink(file_name)
+                process_import_file(file_name)
 
-                    file_name_new = path_to_folder_archive + tail + '.' + time_run_batch
-                    # os.makedirs(os.path.dirname(file_name_new), exist_ok=True)
-                    os.rename(file_name, file_name_new)
+                file_name_new = path_to_folder_archive + tail + '.' + time_run_batch
+                os.rename(file_name, file_name_new)
 
             print('-' * 100)
 
-        get_list_file()
-        print('-' * 100)
+        process_import_folder()
+
+    print('-' * 100)
