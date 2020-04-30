@@ -92,7 +92,7 @@
     "immutability-helper": "^2.4.0",
     "imports-loader": "^0.6.5",
     "ip": "^1.1.2",
-    "jquery": "^2.2.3",
+    "jquery": "^3.5.0",
     "json-loader": "^0.5.4",
     "jsx-switch": "0.0.3",
     "lodash": "^4.17.2",
