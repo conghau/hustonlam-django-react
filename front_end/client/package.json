@@ -99,7 +99,7 @@
     "material-ui": "^0.19.3",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.11",
-    "node-sass": "^3.7.0",
+    "node-sass": "^4.13.1",
     "normalize.css": "^4.1.1",
     "postcss-loader": "^0.13.0",
     "rc-pagination": "^1.6.2",
