@@ -16,7 +16,7 @@ marshmallow==1.2.6
 openpyxl==2.4.7
 ordereddict==1.1
 pep8==1.7.0
-py==1.4.33
+py==1.10.0
 pyfcm==1.2.3
 Pygments==2.2.0
 PyMySQL==0.7.11
